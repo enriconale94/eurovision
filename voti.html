@@ -1,55 +1,42 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voti</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voti</title>
 
-<style>
-body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  padding: 12px;
-  background: #fafafa;
-}
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 12px;
+    }
 
-h2 {
-  text-align: center;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
+    th {
+      background: #f0f0f0;
+    }
 
-th {
-  background: #f0f0f0;
-  font-weight: 600;
-}
+    .paese {
+      text-align: left;
+      font-weight: 600;
+    }
 
-.paese {
-  text-align: left;
-  font-weight: 600;
-}
-
-select {
-  font-size: 16px;
-  width: 100%;
-}
-
-.totale {
-  font-weight: 700;
-  background: #f9f9f9;
-}
-</style>
+    select {
+      font-size: 16px;
+      width: 100%;
+    }
+  </style>
 </head>
-
 <body>
 
 <h2>Voti</h2>
@@ -65,60 +52,46 @@ select {
 
   <tr>
     <td class="paese">🇮🇹 Italia</td>
-    <td><select data-key="italia-p" onchange="calcola(this)"></select></td>
-    <td><select data-key="italia-s" onchange="calcola(this)"></select></td>
-    <td><select data-key="italia-m" onchange="calcola(this)"></select></td>
-    <td class="totale">0</td>
+    <td><select onchange="calcola(this)"></select></td>
+    <td><select onchange="calcola(this)"></select></td>
+    <td><select onchange="calcola(this)"></select></td>
+    <td class="media">0</td>
   </tr>
 
   <tr>
-    <td class="paese">🇩🇪 Germania</td>
-    <td><select data-key="germania-p" onchange="calcola(this)"></select></td>
-    <td><select data-key="germania-s" onchange="calcola(this)"></select></td>
-    <td><select data-key="germania-m" onchange="calcola(this)"></select></td>
-    <td class="totale">0</td>
+    <td class="paese">🇸🇪 Svezia</td>
+    <td><select onchange="calcola(this)"></select></td>
+    <td><select onchange="calcola(this)"></select></td>
+    <td><select onchange="calcola(this)"></select></td>
+    <td class="media">0</td>
   </tr>
-
-  <tr>
-    <td class="paese">🇫🇷 Francia</td>
-    <td><select data-key="francia-p" onchange="calcola(this)"></select></td>
-    <td><select data-key="francia-s" onchange="calcola(this)"></select></td>
-    <td><select data-key="francia-m" onchange="calcola(this)"></select></td>
-    <td class="totale">0</td>
-  </tr>
-
 </table>
 
 <script>
-// Popola i menu con voti 1–10 a step 0.5
-document.querySelectorAll("select").forEach(sel => {
-  for (let i = 1; i <= 10; i += 0.5) {
-    sel.innerHTML += `<option value="${i}">${i}</option>`;
-  }
-
-  // carica valore salvato
-  const key = sel.dataset.key;
-  if (localStorage.getItem(key)) {
-    sel.value = localStorage.getItem(key);
-  }
-});
-
-// calcolo media + salvataggio automatico
-function calcola(el) {
-  const riga = el.parentElement.parentElement;
-  let somma = 0;
-  let count = 0;
-
-  riga.querySelectorAll("select").forEach(s => {
-    somma += Number(s.value);
-    count++;
-
-    // salva ogni voto
-    localStorage.setItem(s.dataset.key, s.value);
+  // popola i menu (1–10 con step 0.5)
+  document.querySelectorAll("select").forEach(sel => {
+    for (let i = 1; i <= 10; i += 0.5) {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.text = i;
+      sel.appendChild(opt);
+    }
   });
 
-  const media = somma / count;
+  function calcola(el) {
+    const row = el.parentElement.parentElement;
+    let sum = 0;
+    let count = 0;
 
-  // arrotonda a 0.5
-  const mediaArrotondata = Math.round(media * 2) / 2;
+    row.querySelectorAll("select").forEach(s => {
+      sum += Number(s.value);
+      count++;
+    });
 
+    const media = Math.round((sum / count) * 2) / 2;
+    row.querySelector(".media").innerText = media.toFixed(1);
+  }
+</script>
+
+</body>
+</html>
